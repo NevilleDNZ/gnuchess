@@ -15,7 +15,7 @@
 This manual is for GNU Chess (version @value{VERSION}, @value{UPDATED}),
 which is a complete chess program, frequently used as a chess engine.
 
-Copyright @copyright{} 2001--2020 Free Software Foundation, Inc.
+Copyright @copyright{} 2001--2021 Free Software Foundation, Inc.
 
 @quotation
 Permission is granted to copy, distribute and/or modify this document
@@ -1094,18 +1094,24 @@ Users are encouraged to provide it.
 @cindex xboard
 @cindex winboard
 Running the program with the "--xboard" command line parameter sets it
-to produce output acceptable to and accept input suitable for XBoard
-and WinBoard, the graphical display front-ends with mouse interface.
+to produce output acceptable to and accept input suitable for XBoard,
+the graphical display front-end with mouse interface.
 
 For historical reasons the option "xboard" does not need to be
-preceeded by "--", however we would encourage the new syntax.
+preceeded by "--"; however we would encourage the new syntax.
 
-How to run XBoard with GNU Chess as chess backend:
+How to run XBoard with GNU Chess as backend (first chess engine):
 
 @example
 xboard -fcp 'gnuchess --xboard'
 
 xboard -fd . -fcp './gnuchess --xboard'
+@end example
+
+How to run XBoard with GNU Chess playing against itself:
+
+@example
+./xboard -fcp './gnuchess -x' -fd . -scp './gnuchess -x' -sd . -pieceImageDirectory 'svg' -matchMode T -tc 1
 @end example
 
 

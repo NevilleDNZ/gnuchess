@@ -1,10 +1,10 @@
 This is gnuchess.info, produced by makeinfo version 6.1 from
 gnuchess.texi.
 
-This manual is for GNU Chess (version 6.2.7, 14 March 2020), which is a
+This manual is for GNU Chess (version 6.2.8, 24 March 2021), which is a
 complete chess program, frequently used as a chess engine.
 
-   Copyright (C) 2001-2020 Free Software Foundation, Inc.
+   Copyright (C) 2001-2021 Free Software Foundation, Inc.
 
      Permission is granted to copy, distribute and/or modify this
      document under the terms of the GNU Free Documentation License,
@@ -23,12 +23,12 @@ File: gnuchess.info,  Node: Top,  Next: Overview,  Up: (dir)
 GNU Chess
 *********
 
-This manual is for GNU Chess (version 6.2.7, 14 March 2020).
+This manual is for GNU Chess (version 6.2.8, 24 March 2021).
 
-   This manual is for GNU Chess (version 6.2.7, 14 March 2020), which is
+   This manual is for GNU Chess (version 6.2.8, 24 March 2021), which is
 a complete chess program, frequently used as a chess engine.
 
-   Copyright (C) 2001-2020 Free Software Foundation, Inc.
+   Copyright (C) 2001-2021 Free Software Foundation, Inc.
 
      Permission is granted to copy, distribute and/or modify this
      document under the terms of the GNU Free Documentation License,
@@ -930,17 +930,21 @@ File: gnuchess.info,  Node: XBoard chess engine,  Next: UCI chess engine,  Prev:
 =======================
 
 Running the program with the "-xboard" command line parameter sets it to
-produce output acceptable to and accept input suitable for XBoard and
-WinBoard, the graphical display front-ends with mouse interface.
+produce output acceptable to and accept input suitable for XBoard, the
+graphical display front-end with mouse interface.
 
    For historical reasons the option "xboard" does not need to be
-preceeded by "-", however we would encourage the new syntax.
+preceeded by "-"; however we would encourage the new syntax.
 
-   How to run XBoard with GNU Chess as chess backend:
+   How to run XBoard with GNU Chess as backend (first chess engine):
 
      xboard -fcp 'gnuchess --xboard'
 
      xboard -fd . -fcp './gnuchess --xboard'
+
+   How to run XBoard with GNU Chess playing against itself:
+
+     ./xboard -fcp './gnuchess -x' -fd . -scp './gnuchess -x' -sd . -pieceImageDirectory 'svg' -matchMode T -tc 1
 
 
 File: gnuchess.info,  Node: UCI chess engine,  Next: Internet,  Prev: XBoard chess engine,  Up: Invocation
@@ -2099,31 +2103,31 @@ Node: Options15502
 Node: Workarounds23313
 Node: Output files24871
 Node: XBoard chess engine26524
-Node: UCI chess engine27163
-Node: Internet27485
-Node: Book27936
-Node: Tests28117
-Node: Chess notation28322
-Node: History29437
-Node: Known problems29768
-Node: Adapter29916
-Node: Developers30616
-Node: Background of v630924
-Node: Guidelines followed to develop GNU Chess v631564
-Node: Chess engine protocol adapter32803
-Node: Structure of the source code33954
-Node: C/C++ coexistence36048
-Node: Chess engine37055
-Node: Fruit overview37342
-Node: Board data structure38305
-Node: Search algorithm38806
-Node: Transposition table39717
-Node: Null move40138
-Node: Move ordering40793
-Node: Evaluation function41169
-Node: Speed41922
-Node: Translations42199
-Node: GNU Free Documentation License43191
-Node: Concept index68348
+Node: UCI chess engine27340
+Node: Internet27662
+Node: Book28113
+Node: Tests28294
+Node: Chess notation28499
+Node: History29614
+Node: Known problems29945
+Node: Adapter30093
+Node: Developers30793
+Node: Background of v631101
+Node: Guidelines followed to develop GNU Chess v631741
+Node: Chess engine protocol adapter32980
+Node: Structure of the source code34131
+Node: C/C++ coexistence36225
+Node: Chess engine37232
+Node: Fruit overview37519
+Node: Board data structure38482
+Node: Search algorithm38983
+Node: Transposition table39894
+Node: Null move40315
+Node: Move ordering40970
+Node: Evaluation function41346
+Node: Speed42099
+Node: Translations42376
+Node: GNU Free Documentation License43368
+Node: Concept index68525
 
 End Tag Table
