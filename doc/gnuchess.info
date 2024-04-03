@@ -1,7 +1,7 @@
 This is gnuchess.info, produced by makeinfo version 6.1 from
 gnuchess.texi.
 
-This manual is for GNU Chess (version 6.2.8, 24 March 2021), which is a
+This manual is for GNU Chess (version 6.2.9, 10 May 2021), which is a
 complete chess program, frequently used as a chess engine.
 
    Copyright (C) 2001-2021 Free Software Foundation, Inc.
@@ -23,10 +23,10 @@ File: gnuchess.info,  Node: Top,  Next: Overview,  Up: (dir)
 GNU Chess
 *********
 
-This manual is for GNU Chess (version 6.2.8, 24 March 2021).
+This manual is for GNU Chess (version 6.2.9, 10 May 2021).
 
-   This manual is for GNU Chess (version 6.2.8, 24 March 2021), which is
-a complete chess program, frequently used as a chess engine.
+   This manual is for GNU Chess (version 6.2.9, 10 May 2021), which is a
+complete chess program, frequently used as a chess engine.
 
    Copyright (C) 2001-2021 Free Software Foundation, Inc.
 
@@ -2089,45 +2089,45 @@ Concept index
 
 
 Tag Table:
-Node: Top814
-Node: Overview2150
-Node: Contact info2712
-Node: Invocation4315
-Node: Invoking gnuchess4638
-Node: Interactive game6221
-Node: Command list6559
-Node: Environment variables13362
-Node: Configuration file13829
-Node: Structure14046
-Node: Options15502
-Node: Workarounds23313
-Node: Output files24871
-Node: XBoard chess engine26524
-Node: UCI chess engine27340
-Node: Internet27662
-Node: Book28113
-Node: Tests28294
-Node: Chess notation28499
-Node: History29614
-Node: Known problems29945
-Node: Adapter30093
-Node: Developers30793
-Node: Background of v631101
-Node: Guidelines followed to develop GNU Chess v631741
-Node: Chess engine protocol adapter32980
-Node: Structure of the source code34131
-Node: C/C++ coexistence36225
-Node: Chess engine37232
-Node: Fruit overview37519
-Node: Board data structure38482
-Node: Search algorithm38983
-Node: Transposition table39894
-Node: Null move40315
-Node: Move ordering40970
-Node: Evaluation function41346
-Node: Speed42099
-Node: Translations42376
-Node: GNU Free Documentation License43368
-Node: Concept index68525
+Node: Top812
+Node: Overview2144
+Node: Contact info2706
+Node: Invocation4309
+Node: Invoking gnuchess4632
+Node: Interactive game6215
+Node: Command list6553
+Node: Environment variables13356
+Node: Configuration file13823
+Node: Structure14040
+Node: Options15496
+Node: Workarounds23307
+Node: Output files24865
+Node: XBoard chess engine26518
+Node: UCI chess engine27334
+Node: Internet27656
+Node: Book28107
+Node: Tests28288
+Node: Chess notation28493
+Node: History29608
+Node: Known problems29939
+Node: Adapter30087
+Node: Developers30787
+Node: Background of v631095
+Node: Guidelines followed to develop GNU Chess v631735
+Node: Chess engine protocol adapter32974
+Node: Structure of the source code34125
+Node: C/C++ coexistence36219
+Node: Chess engine37226
+Node: Fruit overview37513
+Node: Board data structure38476
+Node: Search algorithm38977
+Node: Transposition table39888
+Node: Null move40309
+Node: Move ordering40964
+Node: Evaluation function41340
+Node: Speed42093
+Node: Translations42370
+Node: GNU Free Documentation License43362
+Node: Concept index68519
 
 End Tag Table
