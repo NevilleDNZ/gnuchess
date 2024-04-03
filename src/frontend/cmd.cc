@@ -2,7 +2,7 @@
 
    GNU Chess frontend
 
-   Copyright (C) 2001-2020 Free Software Foundation, Inc.
+   Copyright (C) 2001-2021 Free Software Foundation, Inc.
 
    GNU Chess is based on the two research programs
    Cobalt by Chua Kong-Sian and Gazebo by Stuart Cracraft.
@@ -59,6 +59,7 @@ char *endptr;
 static int hardFlag=0;
 static int postFlag=0;
 
+static const char setboard_cmd[] = "setboard ";
 
 static void split_input(void)
 {
@@ -93,24 +94,90 @@ static int tokeneq(const char *s, const char *t)
 }
 
 /*
- * Reads a PGN file and returns the equivalent EPD content
- *
- * The conversion relies on a temporary file in EPD format,
- * which is removed afterwards.
+ * Remove a trailing \n and return NULL if last character is not \n.
  */
-static char *load_pgn_as_epd( const char *pgn_filename, char *epdline, int showheading )
+static char *trim_newline(char *line)
 {
-  FILE *epdfile=NULL;
-  char tmp_epd[]=".tmp.epd";
+  if (line == NULL) {
+    return NULL;
+  }
+  const size_t line_len = strlen(line);
+  const size_t last_char_index = strlen(line) - 1;
+  if (line_len <= 0 || line[last_char_index] != '\n') {
+    return NULL;
+  }
+  line[last_char_index] = '\0';
+  return line;
+}
 
-  PGNReadFromFile (pgn_filename, showheading);
-  SaveEPD( tmp_epd );
-  epdfile = fopen( tmp_epd, "r" );
-  char *s = fgets( epdline, MAXSTR, epdfile );
-  fclose( epdfile );
-  remove( tmp_epd );
+/*
+ * Takes an EPD filename as input and returns the contents as a
+ * 'setboard <epd-position>' command.
+ */
+static char *build_setboard_cmd_from_epd_file(char *data, const char *epd_filename, unsigned int data_len)
+{
+  char *result = NULL;
+  char *epdline = (char *)calloc(data_len, sizeof(char));
 
-  return s;
+  if (epdline == NULL) {
+    return NULL;
+  }
+  FILE *epdfile = fopen(epd_filename, "r");
+  if (epdfile == NULL) {
+    return NULL;
+  }
+  if (fgets(epdline, data_len, epdfile) && trim_newline(epdline) && strlen(setboard_cmd) + strlen(epdline) < data_len) {
+    strcpy(data, setboard_cmd);
+    strcat(data, epdline);
+    result = data;
+  }
+  fclose(epdfile);
+  free(epdline);
+
+  return result;
+}
+
+/*
+ * Takes a PGN filename as input and returns the contents as a
+ * 'setboard <epd-position>' command.
+ */
+static char *build_setboard_cmd_from_pgn_file(char *data, const char *pgn_filename, unsigned int data_len)
+{
+  char *result = NULL;
+  char *epdline = (char *)calloc(data_len, sizeof(char));
+
+  if (epdline == NULL) {
+    return NULL;
+  }
+  PGNReadFromFile (pgn_filename, 0);
+  EPD2str(epdline);
+  if (strlen(setboard_cmd) + strlen(epdline) < data_len) {
+    strcpy(data, setboard_cmd);
+    strcat(data, epdline);
+    result = data;
+  }
+  free(epdline);
+
+  return result;
+}
+
+/*
+ * Loads a PGN file. Returns 1 on success, 0 on error.
+ */
+static int pgnload(const char *pgn_filename)
+{
+  int success;
+  char data[MAXSTR]="";
+
+  if (build_setboard_cmd_from_pgn_file(data, pgn_filename, sizeof(data))) {
+    SetDataToEngine( data );
+    SetAutoGo( true );
+    success = 1;
+  } else {
+    printf( _("Error loading PGN file '%s'.\n"), pgn_filename );
+    success = 0;
+  }
+  return success;
 }
 
 void cmd_accepted(void)
@@ -317,8 +384,9 @@ void cmd_list(void)
 
 void cmd_load(void)
 {
+  char *epd_filename = token[1];
   char data[MAXSTR]="";
-  LoadEPD (token[1]);
+  LoadEPD (epd_filename);
   pgnloaded = 0;
   check_board();
   if (!ValidateBoard()) {
@@ -326,31 +394,11 @@ void cmd_load(void)
     printf (_("Board is wrong!\n"));
   } else {
     /* Read EPD file and send contents to engine */
-    FILE *epdfile = fopen( token[1], "r" );
-    char epdline[MAXSTR]="";
-    if ( epdfile == NULL ) {
-      printf(_("Error reading file '%s'.\n"), token[1] );
+    if (build_setboard_cmd_from_epd_file(data, epd_filename, strlen(data))) {
+      SetDataToEngine( data );
+      SetAutoGo( true );
     } else {
-      if ( fgets( epdline, MAXSTR, epdfile ) == NULL ) {
-        printf(_("Error reading file '%s'.\n"), token[1] );
-      } else {
-        const char setboardCmd[] = "setboard ";
-        unsigned int setboardLen = strlen(setboardCmd);
-        strcpy( data, setboardCmd );
-        int i=0;
-        while ( epdline[i] != '\n' ) {
-          if (i + setboardLen < MAXSTR - 1) {
-              data[i+setboardLen] = epdline[i];
-              ++i;
-          } else {
-              printf(_("Error reading contents of file '%s'.\n"), token[1] );
-              break;
-          }
-        }
-        data[i+setboardLen] = '\0';
-        SetDataToEngine( data );
-        SetAutoGo( true );
-      }
+      printf( _("Error loading EPD file '%s'.\n"), epd_filename );
     }
   }
 }
@@ -468,50 +516,15 @@ void cmd_otim(void)
  */
 void cmd_pgnload(void)
 {
-  char data[MAXSTR]="";
-  char epdline[MAXSTR]="";
-
-  char *s = load_pgn_as_epd( token[1], epdline, 0 );
-  if ( s == NULL ) {
-    printf( _("Incorrect epd file.\n") );
-    return;
-  }
-
-  strcpy( data, "setboard " );
-  int i=0;
-  while ( epdline[i] != '\n' ) {
-    data[i+9] = epdline[i];
-    ++i;
-  }
-  data[i+9] = '\0';
-  SetDataToEngine( data );
-  SetAutoGo( true );
-  pgnloaded = 0;
+  pgnload(token[1]);
 }
 
 /* See comment above in cmd_pgnload about PGN -> EPD conversion. */
 void cmd_pgnreplay(void)
 {
-  char data[MAXSTR]="";
-  char epdline[MAXSTR]="";
-
-  char *s = load_pgn_as_epd( token[1], epdline, 1 );
-  if ( s == NULL ) {
-    printf( _("Incorrect epd file.\n") );
+  if (!pgnload(token[1])) {
     return;
   }
-
-  strcpy( data, "setboard " );
-  int i=0;
-  while ( epdline[i] != '\n' ) {
-    data[i+9] = epdline[i];
-    ++i;
-  }
-  data[i+9] = '\0';
-
-  SetDataToEngine( data );
-  SetAutoGo( true );
-
   pgnloaded = 1;
   pgncnt = GameCnt;
 
@@ -840,7 +853,7 @@ Play the game of chess.\n\n"), stdout );
 \n"), stdout );
       fputs( _("\
  The file 'gnuchess.ini' allows setting config options if --uci is not\n\
- used. See 'info gnuchess' for details. The file is looked in three\n\
+ used. See 'info gnuchess' for details. The file is looked for in three\n\
  locations according to this precedence: current directory, the\n\
  directory pointed to by environment variable GNUCHESS_PKGDATADIR,\n\
  or the package data directory stated at configure time.\n\
